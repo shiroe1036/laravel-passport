@@ -20,35 +20,35 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(UserController::class)->group(function(){
     Route::post('login', 'loginUser');
+    Route::get('/redirect', function (Request $request) {
+        // $request->session()->put('state', $state = Str::random(40));
+     
+        // $request->session()->put(
+        //     'code_verifier', $code_verifier = Str::random(128)
+        // );
+    
+        $state = Str::random(40);
+    
+        $code_verifier = Str::random(128);
+     
+        $codeChallenge = strtr(rtrim(
+            base64_encode(hash('sha256', $code_verifier, true))
+        , '='), '+/', '-_');
+     
+        $query = http_build_query([
+            'client_id' => '3',
+            'redirect_uri' => 'http://localhost:3000',
+            'response_type' => 'code',
+            'scope' => '',
+            'state' => $state,
+            'code_challenge' => $codeChallenge,
+            'code_challenge_method' => 'S256',
+            // 'prompt' => '', // "none", "consent", or "login"
+        ]);
+     
+        return redirect('http://localhost/oauth/authorize?'.$query);
+    });
 
-    // Route::get('/redirect', function (Request $request) {
-    //     // $request->session()->put('state', $state = Str::random(40));
-     
-    //     // $request->session()->put(
-    //     //     'code_verifier', $code_verifier = Str::random(128)
-    //     // );
-
-    //     $state = Str::random(40);
-
-    //     $code_verifier = Str::random(128);
-     
-    //     $codeChallenge = strtr(rtrim(
-    //         base64_encode(hash('sha256', $code_verifier, true))
-    //     , '='), '+/', '-_');
-     
-    //     $query = http_build_query([
-    //         'client_id' => '3',
-    //         'redirect_uri' => 'http://localhost:3000',
-    //         'response_type' => 'code',
-    //         'scope' => '',
-    //         'state' => $state,
-    //         'code_challenge' => $codeChallenge,
-    //         'code_challenge_method' => 'S256',
-    //         // 'prompt' => '', // "none", "consent", or "login"
-    //     ]);
-     
-    //     return redirect('http://localhost/oauth/authorize?'.$query);
-    // });
 });
 
 Route::controller(UserController::class)->group(function(){
