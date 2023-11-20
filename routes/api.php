@@ -36,14 +36,12 @@ Route::controller(UserController::class)->group(function(){
         , '='), '+/', '-_');
      
         $query = http_build_query([
-            'client_id' => '3',
-            'redirect_uri' => 'http://localhost:3000',
+            'client_id' => '1',
+            'redirect_uri' => 'http://localhost',
             'response_type' => 'code',
             'scope' => '',
             'state' => $state,
-            'code_challenge' => $codeChallenge,
-            'code_challenge_method' => 'S256',
-            // 'prompt' => '', // "none", "consent", or "login"
+            'prompt' => 'consent', // "none", "consent", or "login"
         ]);
      
         return redirect('http://localhost/oauth/authorize?'.$query);
