@@ -22,26 +22,26 @@ Route::controller(UserController::class)->group(function(){
     Route::post('login', 'loginUser');
     Route::get('/redirect', function (Request $request) {
         // $request->session()->put('state', $state = Str::random(40));
-     
+
         // $request->session()->put(
         //     'code_verifier', $code_verifier = Str::random(128)
         // );
-    
+
         $state = Str::random(40);
-    
+
         $code_verifier = Str::random(128);
-     
+
         $codeChallenge = strtr(rtrim(
             base64_encode(hash('sha256', $code_verifier, true))
         , '='), '+/', '-_');
-     
+
         $query = http_build_query([
             'client_id' => '3',
             'redirect_uri' => 'http://localhost:5174/callback',
             'response_type' => 'code',
             'scope' => '',
         ]);
-     
+
         return redirect('http://localhost/oauth/authorize?'.$query);
     });
 
